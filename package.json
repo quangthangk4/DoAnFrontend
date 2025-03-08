@@ -11,10 +11,13 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "@svgr/webpack": "^8.1.0",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
     "react-dom": "^19.0.0",
+    "react-router-dom": "^7.3.0",
     "sass": "^1.85.1"
   },
   "devDependencies": {

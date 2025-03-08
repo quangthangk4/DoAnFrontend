@@ -1,0 +1,44 @@
+$bg-image: url('../assets/picture/homepageBackground.png');
+
+.header-homepage{
+    .btn-header:hover {
+        opacity: 0.8;
+    }
+}
+
+.homepage-section1 {
+    height: 800px;
+    background-color: #B6B6FF;
+    .macbook-picture {
+        width: 60%;
+        right: 10px;
+        top: 150px;
+    }
+    .title1 {
+        left: 10%;
+        top: 20%;
+    }
+    .description1 {
+        left: 10%;
+        top: 40%;
+    }
+    .contact1 {
+        right: 5%;
+        bottom: 5%;
+    }
+}
+
+.homepage-section2 {
+    height: 800px;
+    background-image: $bg-image;
+    background-repeat: no-repeat;
+    background-size: cover;
+    .title1 {
+        left: 10%;
+        top: 20%;
+    }
+    .description1 {
+        left: 10%;
+        top: 70%;
+    }
+}
