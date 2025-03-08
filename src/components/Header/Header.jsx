@@ -8,7 +8,7 @@ const Header = () => {
   return (
     <div className='header-layout'>
       <div className="d-flex justify-content-between px-4 py-2 bg-white fixed-top">
-        <Link to="/" >
+        <Link to="/user/dashboard" >
           <img src={logo} alt="logo page" style={{ width: "130px" }} className='' />
         </Link>
         <form class="d-flex" role="search" style={{flex:"1", padding:"0 50px", maxWidth:"800px"}}>
@@ -22,7 +22,7 @@ const Header = () => {
         </div>
       </div>
       <div className="side-bar d-flex flex-column pt-5">
-        <Link to="/" className='pt-3 link-icon'>
+        <Link to="/user/dashboard" className='pt-3 link-icon'>
           <i class="bi bi-house-door"></i>
         </Link>
         <Link to="/" className='pt-3 link-icon'>
