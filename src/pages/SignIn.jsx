@@ -26,7 +26,7 @@ const SignIn = () => {
             <input type="password" class="form-control" id="floatingPassword" placeholder="Password" />
             <label className='text-secondary fw-bold' for="floatingPassword">Password</label>
           </div>
-          <button className="btn btn-primary px-5 mt-4">Login</button>
+          <button className="btn btn-primary px-5 mt-4">Create Account</button>
           <p className='mt-3'>Already have an account? <Link to="/login">Login</Link></p>
         </form>
       </div>

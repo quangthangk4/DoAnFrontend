@@ -2,8 +2,17 @@ import React from 'react'
 import logo from "../assets/picture/logo.svg"
 import picture1 from "../assets/picture/pictureLogin.png"
 import { Link } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate("/user/dashboard"); // Chuyển đến trang Login
+  };
+
+
   return (
     <div className='position-relative' style={{ height: "100vh" }}>
       <Link to="/" >
@@ -22,7 +31,7 @@ const Login = () => {
             <input type="password" class="form-control" id="floatingPassword" placeholder="Password" />
             <label className='text-secondary fw-bold' for="floatingPassword">Password</label>
           </div>
-          <button className="btn btn-primary px-5 mt-4">Login</button>
+          <button onClick={handleLogin} className="btn btn-primary px-5 mt-4">Login</button>
           <p className='mt-3'>Don’t have an account? <Link to="/signin">Create Account</Link></p>
         </form>
       </div>
