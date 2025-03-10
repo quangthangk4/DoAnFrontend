@@ -10,20 +10,20 @@ const SignIn = () => {
         <img src={logo} alt="logo page" width={200} className='m-5' />
       </Link>
       <img src={picture1} alt="picture" className='position-absolute' style={{ width: "30%", right: "10%", top: "150px" }} />
-      <div class="form-login position-absolute" style={{ width: "30%", left: "10%", top: "25%" }}>
+      <div className="form-login position-absolute" style={{ width: "30%", left: "10%", top: "25%" }}>
         <h3>Welcome</h3>
         <h5 className='text-secondary mb-5'>You are one Step away from becoming a member of Yolo Home</h5>
         <form>
-          <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="floatingName" placeholder="username" />
+          <div className="form-floating mb-3">
+            <input type="text" className="form-control" id="floatingName" placeholder="username" />
             <label className='fw-bold text-secondary' for="floatingName">Name</label>
           </div>
-          <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" />
+          <div className="form-floating mb-3">
+            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
             <label className='fw-bold text-secondary' for="floatingInput">Email</label>
           </div>
-          <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" />
+          <div className="form-floating">
+            <input type="password" className="form-control" id="floatingPassword" placeholder="Password" />
             <label className='text-secondary fw-bold' for="floatingPassword">Password</label>
           </div>
           <button className="btn btn-primary px-5 mt-4">Create Account</button>

@@ -2,23 +2,76 @@ import React from 'react'
 import picture1 from "../../assets/picture/TechLifeCommunication.svg"
 import "../../scss/dashboard.scss"
 import { TbAirConditioning } from "react-icons/tb";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "../../scss/globalStyle.scss"
 import { FaDoorOpen } from "react-icons/fa";
+import { MdOutlineElectricBolt } from "react-icons/md";
+import avatar from "../../assets/picture/member-avatar.svg"
+import { data } from 'react-router-dom';
 
 const DashBoard = () => {
+  // wheel scroll
+  const scrollRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.25; // Điều chỉnh tốc độ kéo
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // data
   const devices = [
     { id: 1, name: "Electric Fan", icon: <TbAirConditioning /> },
     { id: 2, name: "Automatic Door", icon: <FaDoorOpen /> },
-    { id: 3, name: "Temperature", icon: <i class="bi bi-thermometer-sun"></i> },
-    { id: 4, name: "Lights", icon: <i class="bi bi-lightbulb"></i> },
-    { id: 5, name: "Chưa biết là gì", icon: <i class="bi bi-question-diamond"></i> },
+    { id: 3, name: "Temperature", icon: <i className="bi bi-thermometer-sun"></i> },
+    { id: 4, name: "Lights", icon: <i className="bi bi-lightbulb"></i> },
+    { id: 5, name: "Chưa biết là gì", icon: <i className="bi bi-question-diamond"></i> },
   ];
 
   const sensorData = [
-    { id: 1, name: "Temperature Card", data: "32" + "℃", icon: <i class="bi bi-lightbulb"></i>, color: "#ff9e9e" },
-    { id: 2, name: "Humidity Card", data: "70" + "%", icon: <i class="bi bi-thermometer-sun"></i>, color: "#a4adff" },
-    { id: 3, name: "Light Intensity Card", data: "300" + "LUX", icon: <i class="bi bi-moisture"></i>, color: "#83b7b3" }
+    { id: 1, name: "Temperature Card", data: "32" + "℃", icon: <i className="bi bi-lightbulb"></i>, color: "#ff9e9e" },
+    { id: 2, name: "Humidity Card", data: "70" + "%", icon: <i className="bi bi-thermometer-sun"></i>, color: "#a4adff" },
+    { id: 3, name: "Light Intensity Card", data: "300" + "LUX", icon: <i className="bi bi-moisture"></i>, color: "#83b7b3" }
+  ]
+
+
+  const notify = [
+    { id: 1, data: "Low light detected, consider turning on the light automatically.", icon: <MdOutlineElectricBolt />, color: "#ffdc64" },
+    { id: 2, data: "Temperature exceeds 35°C!", icon: <i className="bi bi-exclamation-circle-fill"></i>, color: "#b22a2a" },
+    { id: 3, data: "Temperature exceeds 35°C!", icon: <i className="bi bi-exclamation-circle-fill"></i>, color: "#b22a2a" },
+    { id: 4, data: "Temperature exceeds 35°C!", icon: <i className="bi bi-exclamation-circle-fill"></i>, color: "#b22a2a" },
+    { id: 5, data: "Temperature exceeds 35°C!", icon: <i className="bi bi-exclamation-circle-fill"></i>, color: "#b22a2a" },
+    { id: 6, data: "Temperature exceeds 35°C!", icon: <i className="bi bi-exclamation-circle-fill"></i>, color: "#b22a2a" },
+    { id: 7, data: "Temperature exceeds 35°C!", icon: <i className="bi bi-exclamation-circle-fill"></i>, color: "#b22a2a" },
+  ]
+
+  const member = [
+    { id: 1, avatar: avatar, name: "Thắng", permisstion: "Partial Access" },
+    { id: 2, avatar: avatar, name: "Thắng", permisstion: "Partial Access" },
+    { id: 3, avatar: avatar, name: "Thắng", permisstion: "Partial Access" },
+    { id: 4, avatar: avatar, name: "Thắng", permisstion: "Partial Access" },
+    { id: 5, avatar: avatar, name: "Thắng", permisstion: "Partial Access" },
+    { id: 6, avatar: avatar, name: "Thắng", permisstion: "Partial Access" },
+    { id: 7, avatar: avatar, name: "Thắng", permisstion: "Partial Access" },
+    { id: 8, avatar: avatar, name: "Thắng", permisstion: "Partial Access" },
+    { id: 9, avatar: avatar, name: "Thắng", permisstion: "Partial Access" },
+    { id: 10, avatar: avatar, name: "Thắng", permisstion: "Partial Access" },
+    { id: 11, avatar: avatar, name: "Thắng", permisstion: "Partial Access" },
   ]
 
 
@@ -43,11 +96,11 @@ const DashBoard = () => {
               <h3 style={{ fontSize: "22px" }}>Hello, Võ Quang Thắng</h3>
               <p style={{ fontSize: "14px", color: "#999999" }}>Welcome home, air quality is good and Fresh. Take a walk and have coffee.</p>
               <p style={{ fontSize: "14px", color: "#808080" }} className='fw-bold'>
-                <i class="bi bi-door-open" style={{ fontSize: "20px" }}></i>
+                <i className="bi bi-door-open" style={{ fontSize: "20px" }}></i>
                 Your Door is locked!
               </p>
-              <button className='btn btn-outline-secondary px-5 me-4'><i class="bi bi-lock"></i> Locked</button>
-              <button className='btn btn-primary px-5'> <i class="bi bi-unlock"></i> Unlock</button>
+              <button className='btn btn-outline-secondary px-5 me-4'><i className="bi bi-lock"></i> Locked</button>
+              <button className='btn btn-primary px-5'> <i className="bi bi-unlock"></i> Unlock</button>
               <img src={picture1} alt="picture" width={200} className='position-absolute picture1' />
             </div>
 
@@ -55,8 +108,8 @@ const DashBoard = () => {
             {/* control device */}
             <div className="d-flex justify-content-between  mt-5 ">
               <h3>Bright’s Home</h3>
-              <select class="form-select w-auto" aria-label="Default select example">
-                <option value="1" selected>Living Room</option>
+              <select className="form-select w-auto" aria-label="Default select example">
+                <option value="1" defaultValue={true}>Living Room</option>
                 <option value="2">Kitchen</option>
                 <option value="3">Store Room</option>
               </select>
@@ -125,11 +178,50 @@ const DashBoard = () => {
           <div className="col-4">
             <div className="notify d-flex justify-content-between">
               <h3 className=''>Alert Notifications</h3>
-              <i class="bi bi-chevron-right"></i>
+              <i className="bi bi-chevron-right"></i>
             </div>
 
             {/* Notifycation */}
-            
+            <div className="notify bg-white rounded-4 p-4 overflow-x-auto" style={{ maxHeight: "300px" }} >
+              {notify.map((notify) => (
+                <div className="notify-icon d-flex justify-content-between align-items-center mb-2" key={notify.id}>
+                  <div style={{ color: `${notify.color}`, fontSize: "32px" }} className="me-3">
+                    {notify.icon}
+                  </div>
+                  <p className='m-0 fs-6 flex-grow-1'>{notify.data}</p>
+                </div>
+              ))}
+            </div>
+
+
+            {/* member */}
+            <div className="notify d-flex justify-content-between mt-4">
+              <h3 className=''>Members</h3>
+              <i className="bi bi-chevron-right"></i>
+            </div>
+
+            <div className="member mt-2 bg-white rounded-4 p-4 overflow-auto text-nowrap"
+              style={{
+                maxHeight: "156px", cursor: isDragging ? "grabbing" : "grab",
+                userSelect: "none"
+              }}
+              ref={scrollRef}
+              onMouseDown={handleMouseDown}
+              onMouseLeave={handleMouseUp}
+              onMouseUp={handleMouseUp}
+              onMouseMove={handleMouseMove}
+            >
+              {member.map((data) => (
+                <div className="member__infor text-center d-inline-block me-3" key={data.id}>
+                  <div className="avatar">
+                    <img src={data.avatar} alt="avatar" />
+                  </div>
+                  <div className="member__name fs-5 fw-bold">{data.name}</div>
+                  <div className="member__permission m-0" style={{ color: "#ccc" }}>{data.permisstion}</div>
+                </div>
+
+              ))}
+            </div>
           </div>
         </div>
       </div>

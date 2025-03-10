@@ -22,15 +22,27 @@
         color: #fff;
     }
 
-    .sensorIcon1{
+    .sensorIcon1 {
         position: absolute;
-        top:10px;
+        top: 10px;
         left: 20px;
     }
 
-    .sensorIcon2{
+    .sensorIcon2 {
         position: absolute;
         bottom: 10px;
         right: 20px;
+    }
+
+    .member::-webkit-scrollbar {
+        display: none;
+        /* Ẩn thanh cuộn trên Chrome, Safari */
+    }
+
+    .member {
+        -ms-overflow-style: none;
+        /* Ẩn thanh cuộn trên IE, Edge */
+        scrollbar-width: none;
+        /* Ẩn thanh cuộn trên Firefox */
     }
 }
