@@ -25,7 +25,7 @@ const Header = () => {
         <Link to="/user/dashboard" className='pt-3 link-icon'>
           <i class="bi bi-house-door"></i>
         </Link>
-        <Link to="/" className='pt-3 link-icon'>
+        <Link to="/user/control" className='pt-3 link-icon'>
           <i class="bi bi-ui-radios-grid"></i>
         </Link>
         <Link to="/" className='pt-3 link-icon'>

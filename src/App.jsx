@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage';
 import Login from './pages/Login';
 import SignIn from './pages/SignIn';
 import DashBoard from './pages/User/DashBoard';
+import DeviceControl from './pages/User/DeviceControl';
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
           <Route path='/signin' element={ <SignIn /> } />
           <Route path='/user' element= {<LayoutUser /> } >
             <Route index path='dashboard' element={ <DashBoard /> } />
+            <Route path='control' element={ <DeviceControl /> } />
           </Route>
         </Routes>
       </Router>
