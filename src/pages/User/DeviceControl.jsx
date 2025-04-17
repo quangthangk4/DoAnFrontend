@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import TemperatureControl from '../../components/Temp/TemperatureControl';
-
+import LightControl from '../../pages/User/LightControl';
+import "../../scss/deviceControl.scss"
 const DeviceControl = () => {
     const devices = ['light', 'fan', 'door'];
     const [activeTab, setActiveTab] = useState('light');
@@ -15,19 +16,19 @@ const DeviceControl = () => {
                 <div className="device-control mt-4">
                     <nav>
                         <button style={{minWidth:"70px"}} onClick={() => setActiveTab('light')} className={`btn me-3 ${activeTab === 'light' ? "btn-primary" : ""}`}>
-                            Đèn
+                            LIGHT
                         </button>
                         <button style={{minWidth:"70px"}} onClick={() => setActiveTab('fan')} className={`btn me-3 ${activeTab === 'fan' ? "btn-primary" : ""}`}>
-                            Quạt
+                            FAN
                         </button>
                         <button style={{minWidth:"70px"}} onClick={() => setActiveTab('door')} className={`btn me-3 ${activeTab === 'door' ? "btn-primary" : ""}`}>
-                            Cửa
+                            DOOR
                         </button>
                     </nav>
 
                     {/* Nội dung hiển thị bên dưới */}
                     <div className="device-content">
-                        {activeTab === 'light' && <p>light</p>}
+                        {activeTab === 'light' && <LightControl />}
                         {activeTab === 'fan' && <TemperatureControl />}
                         {activeTab === 'door' && <p>door</p>}
                     </div>
