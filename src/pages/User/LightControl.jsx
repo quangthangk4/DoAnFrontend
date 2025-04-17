@@ -67,7 +67,7 @@ const LightControl = () => {
                     onMouseUp={handleSliderRelease}
                     onTouchEnd={handleSliderRelease}
                 />
-                <h3>{minLight}%</h3>
+                <p className = "in">{minLight}%</p>
             </div>
             <img src={minlight} alt="minlight animation" className="fan-img" />
         </div>

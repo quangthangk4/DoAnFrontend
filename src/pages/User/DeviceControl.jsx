@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import TemperatureControl from '../../components/Temp/TemperatureControl';
+import FanControl from '../../pages/User/FanControl';
 import LightControl from '../../pages/User/LightControl';
 import "../../scss/deviceControl.scss"
 const DeviceControl = () => {
     const devices = ['light', 'fan', 'door'];
     const [activeTab, setActiveTab] = useState('light');
-
-
     return (
         <div className='p-4'>
             <div className="bg-white rounded-4">
@@ -29,7 +27,7 @@ const DeviceControl = () => {
                     {/* Nội dung hiển thị bên dưới */}
                     <div className="device-content">
                         {activeTab === 'light' && <LightControl />}
-                        {activeTab === 'fan' && <TemperatureControl />}
+                        {activeTab === 'fan' && <FanControl />}
                         {activeTab === 'door' && <p>door</p>}
                     </div>
 
