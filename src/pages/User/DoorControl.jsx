@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import "../../scss/door.scss"
-import door1 from "../../assets/picture/door.png"
-import door2 from "../../assets/picture/door2.gif"
+import "../../scss/door.scss";
+import door1 from "../../assets/picture/door.png";
+import door2 from "../../assets/picture/door2.gif";
+
 function DoorControl() {
     const [status, setStatus] = useState('Locked');
     const [password, setPassword] = useState('');
@@ -13,7 +14,8 @@ function DoorControl() {
     const [showChangeForm, setShowChangeForm] = useState(false);
     const [newCode, setNewCode] = useState('');
     const [failCount, setFailCount] = useState(0);
-    const [alertVisible, setAlertVisible] = useState(false); // 👈 trạng thái hiện thông báo cảnh báo
+    const [alertVisible, setAlertVisible] = useState(false); // trạng thái hiện thông báo cảnh báo
+    const [isManuallyLocked, setIsManuallyLocked] = useState(false); // trạng thái khóa thủ công
 
     const addToHistory = (result) => {
         const entry = { time: new Date(), result };
@@ -50,7 +52,7 @@ function DoorControl() {
 
             if (newFailCount >= 3) {
                 setError('🚨 Warning: Too many failed attempts!');
-                setAlertVisible(true); // 👈 hiện cảnh báo
+                setAlertVisible(true); // hiện cảnh báo
                 addToHistory('🚨 3 Failed Attempts');
                 setFailCount(0);
             }
@@ -62,6 +64,7 @@ function DoorControl() {
 
     const handleLock = () => {
         setStatus('Locked');
+        setIsManuallyLocked(true); // Đánh dấu cửa đã bị khóa thủ công
         addToHistory('Manually Locked');
     };
 
@@ -72,7 +75,6 @@ function DoorControl() {
         setShowChangeForm(false);
         addToHistory('Password Updated');
         setShowChangeTrigger(true);
-        
     };
 
     const getIconForResult = (result) => {
@@ -91,7 +93,7 @@ function DoorControl() {
         <div className="door-control">
             <h2>DOOR CONTROL</h2>
 
-            {/* 🔔 Cảnh báo trên web khi nhập sai 3 lần */}
+            {/* Cảnh báo trên web khi nhập sai 3 lần */}
             {alertVisible && (
                 <div className="alert alert-danger text-center fw-bold">
                     🚨 Warning: 3 Failed Attempts Detected!
@@ -115,11 +117,13 @@ function DoorControl() {
                         onKeyDown={(e) => e.key === 'Enter' && handleUnlock()}
                     />
                     <button className="btn btn-success ms-2" onClick={handleUnlock}>Unlock</button>
+
                     {/* Nút khóa khi cửa đang mở */}
                     {status === 'Unlocked' && (
                         <button className="btn btn-danger ms-2" onClick={handleLock}>Lock</button>
                     )}
                 </div>
+
                 {error && <p className="text-danger mt-2">{error}</p>}
 
                 {status === 'Unlocked' && showChangeTrigger && !showChangeForm && (
@@ -128,7 +132,6 @@ function DoorControl() {
                         <span className="change-label ms-2">Change Password</span>
                     </div>
                 )}
-
 
                 {status === 'Unlocked' && showChangeForm && (
                     <div className="change-code mt-3">
@@ -142,7 +145,6 @@ function DoorControl() {
                         <button className="btn btn-warning ms-2" onClick={handleChangeCode}>Update</button>
                     </div>
                 )}
-
             </div>
 
             <div className="bottom-section mt-4">
