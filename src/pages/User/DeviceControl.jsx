@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import FanControl from '../../pages/User/FanControl';
 import LightControl from '../../pages/User/LightControl';
+import DoorControl from '../../pages/User/DoorControl';
 import "../../scss/deviceControl.scss"
 const DeviceControl = () => {
     const devices = ['light', 'fan', 'door'];
@@ -28,7 +29,7 @@ const DeviceControl = () => {
                     <div className="device-content">
                         {activeTab === 'light' && <LightControl />}
                         {activeTab === 'fan' && <FanControl />}
-                        {activeTab === 'door' && <p>door</p>}
+                        {activeTab === 'door' && <DoorControl />}
                     </div>
 
                 </div>
