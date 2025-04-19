@@ -34,10 +34,13 @@ function DoorControl() {
             addToHistory('Success');
             setFailCount(0);
 
-            setTimeout(() => {
-                setStatus('Locked');
-                addToHistory('Auto Locked');
-            }, 10000);
+            // Chỉ tự động khóa nếu cửa chưa bị khóa thủ công
+            if (!isManuallyLocked) {
+                setTimeout(() => {
+                    setStatus('Locked');
+                    addToHistory('Auto Locked');
+                }, 10000);
+            }
         } else {
             setShake(true);
             const newFailCount = failCount + 1;
@@ -57,6 +60,11 @@ function DoorControl() {
         setPassword('');
     };
 
+    const handleLock = () => {
+        setStatus('Locked');
+        addToHistory('Manually Locked');
+    };
+
     const handleChangeCode = () => {
         if (newCode.trim() === '') return;
         setCorrectCode(newCode);
@@ -74,6 +82,7 @@ function DoorControl() {
             case 'Auto Locked': return '⏱️';
             case 'Password Updated': return '🛠️';
             case '🚨 3 Failed Attempts': return '🚨';
+            case 'Manually Locked': return '🔒';
             default: return '';
         }
     };
@@ -106,6 +115,10 @@ function DoorControl() {
                         onKeyDown={(e) => e.key === 'Enter' && handleUnlock()}
                     />
                     <button className="btn btn-success ms-2" onClick={handleUnlock}>Unlock</button>
+                    {/* Nút khóa khi cửa đang mở */}
+                    {status === 'Unlocked' && (
+                        <button className="btn btn-danger ms-2" onClick={handleLock}>Lock</button>
+                    )}
                 </div>
                 {error && <p className="text-danger mt-2">{error}</p>}
 
