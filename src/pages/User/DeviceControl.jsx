@@ -1,41 +1,98 @@
-import React, { useState } from 'react';
-import FanControl from '../../pages/User/FanControl';
-import LightControl from '../../pages/User/LightControl';
-import DoorControl from '../../pages/User/DoorControl';
-import "../../scss/deviceControl.scss"
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import DoorControl from "../../pages/User/DoorControl";
+import FanControl from "../../pages/User/FanControl";
+import LightControl from "../../pages/User/LightControl";
+import "../../scss/deviceControl.scss";
+import adafruitApi from "../../service/AdafruitService";
+
 const DeviceControl = () => {
-    const devices = ['light', 'fan', 'door'];
-    const [activeTab, setActiveTab] = useState('light');
-    return (
-        <div className='p-4'>
-            <div className="bg-white rounded-4">
-                <h3 className='d-inline me-5' role="button">Living Room</h3>
-                <h3 className='d-inline text-secondary' role="button">Kitchen</h3>
+  const devices = ["light", "fan", "door"];
+  const [activeTab, setActiveTab] = useState("light");
+  const [statusDoor, setStatusDoor] = useState(false);
+  const [data, setData] = useState({
+    isOn: false,
+    minLight: 0,
+    brightness: 0,
+    fanSpeed: 0,
+  });
 
-                <div className="device-control mt-4">
-                    <nav>
-                        <button style={{minWidth:"70px"}} onClick={() => setActiveTab('light')} className={`btn me-3 ${activeTab === 'light' ? "btn-primary" : ""}`}>
-                            LIGHT
-                        </button>
-                        <button style={{minWidth:"70px"}} onClick={() => setActiveTab('fan')} className={`btn me-3 ${activeTab === 'fan' ? "btn-primary" : ""}`}>
-                            FAN
-                        </button>
-                        <button style={{minWidth:"70px"}} onClick={() => setActiveTab('door')} className={`btn me-3 ${activeTab === 'door' ? "btn-primary" : ""}`}>
-                            DOOR
-                        </button>
-                    </nav>
+  useEffect(() => {
+    const fetData = async () => {
+      try {
+        var response = await adafruitApi.getData();
+        setData(response.data?.result);
+      } catch (error) {
+        toast.error("lỗi gọi APi data");
+      }
+    };
+    const fetDataDoor = async () => {
+      try {
+        var response = await adafruitApi.unlockDoor();
+        setStatusDoor(response.data?.result);
+      } catch (error) {
+        toast.error("lỗi gọi APi data");
+      }
+    };
+    fetDataDoor();
+    fetData();
+  }, []);
 
-                    {/* Nội dung hiển thị bên dưới */}
-                    <div className="device-content">
-                        {activeTab === 'light' && <LightControl />}
-                        {activeTab === 'fan' && <FanControl />}
-                        {activeTab === 'door' && <DoorControl />}
-                    </div>
+  return (
+    <div className="p-4">
+      <div className="bg-white rounded-4">
+        <h3 className="d-inline me-5" role="button">
+          Living Room
+        </h3>
+        <h3 className="d-inline text-secondary" role="button">
+          Kitchen
+        </h3>
 
-                </div>
-            </div>
+        <div className="device-control mt-4">
+          <nav>
+            <button
+              style={{ minWidth: "70px" }}
+              onClick={() => setActiveTab("light")}
+              className={`btn me-3 ${
+                activeTab === "light" ? "btn-primary" : ""
+              }`}
+            >
+              LIGHT
+            </button>
+            <button
+              style={{ minWidth: "70px" }}
+              onClick={() => setActiveTab("fan")}
+              className={`btn me-3 ${activeTab === "fan" ? "btn-primary" : ""}`}
+            >
+              FAN
+            </button>
+            <button
+              style={{ minWidth: "70px" }}
+              onClick={() => setActiveTab("door")}
+              className={`btn me-3 ${
+                activeTab === "door" ? "btn-primary" : ""
+              }`}
+            >
+              DOOR
+            </button>
+          </nav>
+
+          {/* Nội dung hiển thị bên dưới */}
+          <div className="device-content">
+            {activeTab === "light" && (
+              <LightControl
+                initIsOn={data.isOn}
+                initMinLight={data.minLight}
+                initBrightness={data.brightness}
+              />
+            )}
+            {activeTab === "fan" && <FanControl initFanSpeed={data.fanSpeed} />}
+            {activeTab === "door" && <DoorControl initUnlockStatus={statusDoor}/>}
+          </div>
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
-export default DeviceControl
+export default DeviceControl;
