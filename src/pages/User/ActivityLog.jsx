@@ -21,7 +21,7 @@ const ActivityLog = () => {
       const response = await axios.get(
         "http://localhost:8080/yolohome/history"
       );
-      setLogs(Array.isArray(response.data) ? response.data : []);
+      setLogs(response.data.result);
     } catch (err) {
       setError("Failed to fetch activity logs. Please try again.");
       setLogs([]);
@@ -205,7 +205,7 @@ const ActivityLog = () => {
                         {log.username}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {format(new Date(log.timestamp), "PPpp")}
+                        {format(new Date(log.time), "PPpp")}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-900">
                         {log.message}

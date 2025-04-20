@@ -256,7 +256,7 @@ const DashBoard = () => {
             {/* greeting (Keep as is) */}
             <div className="greeting position-relative bg-white rounded-5 p-4">
               {/* ... (greeting content) ... */}
-              <h3 style={{ fontSize: "22px" }}>Hello, Võ Quang Thắng</h3>
+              <h3 style={{ fontSize: "22px" }}>Hello, Sir</h3>
               <p style={{ fontSize: "14px", color: "#999999" }}>
                 Welcome home, air quality is good and Fresh. Take a walk and
                 have coffee.
