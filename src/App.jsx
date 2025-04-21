@@ -12,6 +12,7 @@ import SignIn from "./pages/SignIn";
 import DashBoard from "./pages/User/DashBoard";
 import DeviceControl from "./pages/User/DeviceControl";
 import ActivityLog from "./pages/User/ActivityLog";
+import Chart from "./pages/User/Chart";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route index path="dashboard" element={<DashBoard />} />
             <Route path="control" element={<DeviceControl />} />
             <Route path="history" element={<ActivityLog />} />
+            <Route path="chart" element={<Chart />} />
           </Route>
         </Routes>
       </Router>
