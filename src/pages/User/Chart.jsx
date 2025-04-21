@@ -28,25 +28,17 @@ export default function Chart() {
     const fetchAllData = async () => {
       try {
         const [tempRes, humRes] = await Promise.all([
-          axios.get(
-            "http://localhost:8080/yolohome/adafruit/temp-chart/temp/40"
-          ),
-          axios.get(
-            "http://localhost:8080/yolohome/adafruit/temp-chart/humidity/40"
-          ),
+          axios.get("http://localhost:8080/yolohome/adafruit/temp-chart/temp/40"),
+          axios.get("http://localhost:8080/yolohome/adafruit/temp-chart/humidity/40"),
         ]);
 
         const tempData = tempRes.data.result.map((item) => ({
-          time: new Date(item.date).toLocaleTimeString("vi-VN", {
-            hour12: false,
-          }),
+          time: new Date(item.date).toLocaleTimeString("vi-VN", { hour12: false }),
           value: parseFloat(item.value),
         }));
 
         const humidityData = humRes.data.result.map((item) => ({
-          time: new Date(item.date).toLocaleTimeString("vi-VN", {
-            hour12: false,
-          }),
+          time: new Date(item.date).toLocaleTimeString("vi-VN", { hour12: false }),
           value: parseFloat(item.value),
         }));
 
