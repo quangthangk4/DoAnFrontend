@@ -1,17 +1,17 @@
 import React from "react";
-import logo from "../../assets/picture/logo.svg";
-import avatar1 from "../../assets/picture/avatar1.svg";
 import { Link, useNavigate } from "react-router-dom";
-import "./header.scss";
-import { clearAuthData, getUserName } from "../../service/localStorageService";
 import { toast } from "react-toastify";
+import avatar1 from "../../assets/picture/avatar1.svg";
+import logo from "../../assets/picture/logo.svg";
+import { clearAuthData, getUserName } from "../../service/localStorageService";
+import "./header.scss";
 
 const Header = () => {
   const navigate = useNavigate(); // Khởi tạo hook navigate
   const handleLogout = () => {
     console.log("Logging out..."); // Để debug
     clearAuthData(); // Xóa dữ liệu xác thực (token, user info) khỏi localStorage
-    toast.success("logout successful")
+    toast.success("logout successful");
     navigate("/"); // Chuyển hướng về trang đăng nhập
     // Bạn cũng có thể muốn reload trang để đảm bảo mọi state được reset hoàn toàn
     window.location.reload();
@@ -72,7 +72,14 @@ const Header = () => {
           className="pt-3 link-icon"
           title="Notifications"
         >
-          <i className="bi bi-bell"></i>
+          <i class="bi bi-clock-history"></i>
+        </Link>
+        <Link
+          to="/user/chart"
+          className="pt-3 link-icon"
+          title="Notifications"
+        >
+          <i class="bi bi-bar-chart"></i>
         </Link>
         <button
           onClick={handleLogout}
