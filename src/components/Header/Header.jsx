@@ -68,7 +68,7 @@ const Header = () => {
           <i className="bi bi-ui-radios-grid"></i>
         </Link>
         <Link
-          to="/user/notifications"
+          to="/user/history"
           className="pt-3 link-icon"
           title="Notifications"
         >

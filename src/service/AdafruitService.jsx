@@ -10,7 +10,7 @@ const adafruitApi = {
 
   unlockDoor: (data) => axiosClient.post("/yolohome/door/unlock", data),
   lockDoor: () => axiosClient.post("/yolohome/door/lock"),
-  unlockDoor: () => axiosClient.get("/yolohome/door/status"),
+  statusDoor: () => axiosClient.get("/yolohome/door/status"),
   changePassword: (data) => axiosClient.put("/yolohome/door/update-password", data),
 };
 

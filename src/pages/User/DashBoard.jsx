@@ -117,12 +117,13 @@ const DashBoard = () => {
   });
 
   const notify = [
-    {
-      id: 1,
-      data: "Low light detected, consider turning on the light automatically.",
-      icon: <MdOutlineElectricBolt />,
-      color: "#ffdc64",
-    },
+
+    // {
+    //   id: 1,
+    //   data: "Low light detected, consider turning on the light automatically.",
+    //   icon: <MdOutlineElectricBolt />,
+    //   color: "#ffdc64",
+    // },
     {
       id: 2,
       data: "Temperature exceeds 35°C!",

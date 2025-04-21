@@ -28,7 +28,7 @@ const DeviceControl = () => {
     };
     const fetDataDoor = async () => {
       try {
-        var response = await adafruitApi.unlockDoor();
+        var response = await adafruitApi.statusDoor();
         setStatusDoor(response.data?.result);
       } catch (error) {
         toast.error("lỗi gọi APi data");
@@ -87,7 +87,9 @@ const DeviceControl = () => {
               />
             )}
             {activeTab === "fan" && <FanControl initFanSpeed={data.fanSpeed} />}
-            {activeTab === "door" && <DoorControl initUnlockStatus={statusDoor}/>}
+            {activeTab === "door" && (
+              <DoorControl initUnlockStatus={statusDoor} />
+            )}
           </div>
         </div>
       </div>

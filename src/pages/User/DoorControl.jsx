@@ -3,6 +3,7 @@ import "../../scss/door.scss"; // Assuming this path is correct
 import door1 from "../../assets/picture/door.png"; // Assuming this path is correct
 import door2 from "../../assets/picture/door2.gif"; // Assuming this path is correct
 import adafruitApi from "../../service/AdafruitService";
+import { toast } from "react-toastify";
 
 function DoorControl({ initUnlockStatus }) {
   // --- State Variables ---
@@ -63,6 +64,7 @@ function DoorControl({ initUnlockStatus }) {
         err.message ||
         "Wrong code or server error";
       setError(serverMessage);
+      toast.error(serverMessage);
       setShake(true);
       const newFailCount = failCount + 1;
       setFailCount(newFailCount);
@@ -70,6 +72,8 @@ function DoorControl({ initUnlockStatus }) {
 
       if (newFailCount >= 3) {
         setError(`🚨 ${serverMessage} (3+ attempts)`);
+        toast.error(`🚨 ${serverMessage} (3+ attempts)`);
+
         setAlertVisible(true);
         addToHistory("🚨 3 Failed Attempts");
         setFailCount(0); // Reset client counter after warning
