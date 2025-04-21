@@ -11,7 +11,7 @@ const HomePage = () => {
         <Link to="/" >
           <img src={logo} alt="logo page" width={200} className='float-end mx-4' />
         </Link>
-        <Link to="/signin" className="btn float-end mx-4 rounded-pill px-3 text-white fw-bold btn-header" style={{ backgroundColor: "#4F008F" }}>SIGNIN</Link>
+        <Link to="/signin" className="btn float-end mx-4 rounded-pill px-3 text-white fw-bold btn-header" style={{ backgroundColor: "#4F008F" }}>SIGNUP</Link>
         <Link to="/login" className="btn float-end mx-4 rounded-pill px-3 text-white fw-bold btn-header" style={{ backgroundColor: "#4F008F" }}>LOGIN</Link>
       </div>
       <section className='homepage-section1 position-relative' >

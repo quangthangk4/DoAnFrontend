@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -26,58 +26,59 @@ import axios from "axios";
 import * as htmlToImage from "html-to-image";
 
 export default function Chart() {
-  const [chartDataTemp, setChartDataTemp] = useState([]);
-  const [chartDataHumidity, setChartDataHumidity] = useState([]);
+  const [data, setData] = useState({
+    temperature: [],
+    humidity: [],
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [timeRange, setTimeRange] = useState(40); // mặc định 40 giờ
+  const [timeRange, setTimeRange] = useState(1);
 
-  const chartRefTemp = useRef(null);
-  const chartRefHumidity = useRef(null);
+  const chartRefs = {
+    temperature: useRef(null),
+    humidity: useRef(null),
+  };
+
+  const fetchChartData = useCallback(async (range) => {
+    setLoading(true);
+    try {
+      const [tempRes, humRes] = await Promise.all([
+        axios.get(
+          `http://localhost:8080/yolohome/adafruit/temp-chart/temp/${range}`
+        ),
+        axios.get(
+          `http://localhost:8080/yolohome/adafruit/temp-chart/humidity/${range}`
+        ),
+      ]);
+
+      const formatData = (rawData) =>
+        rawData.map((item) => ({
+          time: new Date(item.date).toLocaleTimeString("vi-VN", {
+            hour12: false,
+          }),
+          value: parseFloat(item.value),
+        }));
+
+      setData({
+        temperature: formatData(tempRes.data.result),
+        humidity: formatData(humRes.data.result),
+      });
+
+      setError(null);
+    } catch (err) {
+      console.error("Fetch error:", err);
+      setError("Lỗi khi lấy dữ liệu từ API");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchAllData = async () => {
-      setLoading(true);
-      try {
-        const [tempRes, humRes] = await Promise.all([
-          axios.get(
-            `http://localhost:8080/yolohome/adafruit/temp-chart/temp/${timeRange}`
-          ),
-          axios.get(
-            `http://localhost:8080/yolohome/adafruit/temp-chart/humidity/${timeRange}`
-          ),
-        ]);
-
-        const tempData = tempRes.data.result.map((item) => ({
-          time: new Date(item.date).toLocaleTimeString("vi-VN", {
-            hour12: false,
-          }),
-          value: parseFloat(item.value),
-        }));
-
-        const humidityData = humRes.data.result.map((item) => ({
-          time: new Date(item.date).toLocaleTimeString("vi-VN", {
-            hour12: false,
-          }),
-          value: parseFloat(item.value),
-        }));
-
-        setChartDataTemp(tempData);
-        setChartDataHumidity(humidityData);
-        setError(null);
-      } catch (err) {
-        console.error("Fetch error:", err);
-        setError("Lỗi khi lấy dữ liệu từ API");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAllData();
-  }, [timeRange]);
+    fetchChartData(timeRange);
+  }, [fetchChartData, timeRange]);
 
   const handleExportChart = async (ref, filename) => {
-    if (ref.current === null) return;
+    if (!ref.current) return;
     const dataUrl = await htmlToImage.toPng(ref.current);
     const link = document.createElement("a");
     link.download = `${filename}.png`;
@@ -85,41 +86,69 @@ export default function Chart() {
     link.click();
   };
 
-  const renderChart = (data, label, color, ref) => (
-    <Box display="flex" justifyContent="center" mb={3}>
-      <Card sx={{ width: "100%", maxWidth: 800, p: 2 }}>
-        <CardContent ref={ref} sx={{ textAlign: "center" }}>
-          <Typography
-            variant="h6"
-            gutterBottom
-            sx={{ textTransform: "uppercase" }}
-          >
-            {label}
-          </Typography>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis domain={["dataMin - 1", "dataMax + 1"]} />
-              <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="value"
-                stroke={color}
-                strokeWidth={2}
-                dot={false}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </CardContent>
-        <Box sx={{ display: "flex", justifyContent: "flex-end", p: 1 }}>
-          <Button onClick={() => handleExportChart(ref, label)}>
-            Export Chart
-          </Button>
-        </Box>
-      </Card>
-    </Box>
-  );
+  const chartsConfig = [
+    {
+      key: "temperature",
+      label: "Biểu đồ nhiệt độ",
+      color: "#1976d2",
+    },
+    {
+      key: "humidity",
+      label: "Biểu đồ độ ẩm",
+      color: "#388e3c",
+    },
+  ];
+
+  const renderChart = ({ key, label, color }) => {
+    const chartData = data[key];
+
+    return (
+      <Box key={key} display="flex" justifyContent="center" mb={3}>
+        <Card sx={{ width: "100%", maxWidth: 800, p: 2 }}>
+          <CardContent ref={chartRefs[key]} sx={{ textAlign: "center" }}>
+            <Typography
+              variant="h6"
+              gutterBottom
+              sx={{ textTransform: "uppercase" }}
+            >
+              {label}
+            </Typography>
+
+            {chartData.length === 0 ? (
+              <Typography variant="body2" color="text.secondary">
+                Không có dữ liệu
+              </Typography>
+            ) : (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="time" />
+                  <YAxis domain={["dataMin - 1", "dataMax + 1"]} />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke={color}
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+
+          <Box sx={{ display: "flex", justifyContent: "flex-end", p: 1 }}>
+            <Button
+              onClick={() => handleExportChart(chartRefs[key], label)}
+              disabled={chartData.length === 0}
+            >
+              Export Chart
+            </Button>
+          </Box>
+        </Card>
+      </Box>
+    );
+  };
 
   return (
     <Box sx={{ p: 2 }}>
@@ -149,20 +178,7 @@ export default function Chart() {
       ) : error ? (
         <Alert severity="error">{error}</Alert>
       ) : (
-        <>
-          {renderChart(
-            chartDataTemp,
-            "Biểu đồ nhiệt độ",
-            "#1976d2",
-            chartRefTemp
-          )}
-          {renderChart(
-            chartDataHumidity,
-            "Biểu đồ độ ẩm",
-            "#388e3c",
-            chartRefHumidity
-          )}
-        </>
+        chartsConfig.map(renderChart)
       )}
     </Box>
   );
