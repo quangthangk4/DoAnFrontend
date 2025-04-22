@@ -45,13 +45,13 @@ const ActivityLog = () => {
       )
       .filter((log) => {
         if (!dateRange.start || !dateRange.end) return true;
-        const logDate = new Date(log.timestamp);
+        const logDate = new Date(log.time);
         return (
           logDate >= new Date(dateRange.start) &&
           logDate <= new Date(dateRange.end)
         );
       })
-      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      .sort((a, b) => new Date(b.time) - new Date(a.time));
   }, [logs, searchTerm, dateRange]);
 
   const paginatedLogs = useMemo(() => {
@@ -64,11 +64,9 @@ const ActivityLog = () => {
   const exportLogs = () => {
     const csvContent =
       "data:text/csv;charset=utf-8," +
-      "ID,Username,Timestamp,Message\n" +
+      "ID,Username,time,Message\n" +
       filteredLogs
-        .map(
-          (log) => `${log.id},${log.username},${log.timestamp},${log.message}`
-        )
+        .map((log) => `${log.id},${log.username},${log.time},${log.message}`)
         .join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -205,7 +203,7 @@ const ActivityLog = () => {
                         {log.username}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {format(new Date(log.time), "PPpp")}
+                        {format(new Date(log.time), "dd/MM/yyyy, h:mm:ss a")}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-900">
                         {log.message}

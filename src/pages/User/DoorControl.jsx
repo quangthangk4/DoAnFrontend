@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../scss/door.scss"; // Assuming this path is correct
 import door1 from "../../assets/picture/door.png"; // Assuming this path is correct
-import door2 from "../../assets/picture/door2.gif"; // Assuming this path is correct
+import door2 from "../../assets/picture/door3.png"; // Assuming this path is correct
 import adafruitApi from "../../service/AdafruitService";
 import { toast } from "react-toastify";
 
@@ -11,6 +11,7 @@ function DoorControl({ initUnlockStatus }) {
     initUnlockStatus ? "Unlocked" : "Locked"
   );
   const [password, setPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
   const [history, setHistory] = useState([]);
@@ -39,6 +40,14 @@ function DoorControl({ initUnlockStatus }) {
     }
     return () => clearTimeout(timer);
   }, [alertVisible]);
+
+  useEffect(() => {
+    let timer;
+    if (status == "Unlocked") {
+      timer = setTimeout(() => handleLock(), 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [status]);
 
   const handleUnlock = async () => {
     if (isLoading) return;
@@ -120,7 +129,10 @@ function DoorControl({ initUnlockStatus }) {
 
     try {
       // Call the API using your adafruitApi module
-      await adafruitApi.changePassword({ password: newCode }); // Pass data object
+      await adafruitApi.changePassword({
+        currentPassword: currentPassword,
+        newPassword: newCode,
+      }); // Pass data object
 
       // --- SUCCESS ---
       setNewCode("");
@@ -228,7 +240,7 @@ function DoorControl({ initUnlockStatus }) {
 
         {error && <p className="text-danger mt-2">{error}</p>}
 
-        {status === "Unlocked" && (
+        {
           <>
             {showChangeTrigger && !showChangeForm && (
               <div
@@ -247,14 +259,24 @@ function DoorControl({ initUnlockStatus }) {
 
             {showChangeForm && (
               <div className="change-code mt-3">
-                <h5>Update Code</h5>
-                <input
-                  type="password"
-                  placeholder="New code"
-                  value={newCode}
-                  onChange={(e) => setNewCode(e.target.value)}
-                  disabled={isLoading}
-                />
+                <h5 className="mt-4">Update Code</h5>
+                <div className="mb-2">
+                  <input
+                    type="password"
+                    placeholder="Current Password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    disabled={isLoading}
+                    className="me-2"
+                  />
+                  <input
+                    type="password"
+                    placeholder="New code"
+                    value={newCode}
+                    onChange={(e) => setNewCode(e.target.value)}
+                    disabled={isLoading}
+                  />
+                </div>
                 <button
                   className="btn btn-warning ms-2"
                   onClick={handleChangeCode}
@@ -277,7 +299,7 @@ function DoorControl({ initUnlockStatus }) {
               </div>
             )}
           </>
-        )}
+        }
       </div>
 
       <div className="bottom-section mt-4">

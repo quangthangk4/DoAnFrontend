@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import { format } from "date-fns";
 import {
   Card,
   CardContent,
@@ -52,12 +53,14 @@ export default function Chart() {
       ]);
 
       const formatData = (rawData) =>
-        rawData.map((item) => ({
-          time: new Date(item.date).toLocaleTimeString("vi-VN", {
-            hour12: false,
-          }),
-          value: parseFloat(item.value),
-        }));
+        rawData.map((item) => {
+          const dateObj = new Date(item.date);
+          return {
+            time: format(dateObj, "HH:mm"),
+            fullDate: format(dateObj, "dd/MM/yyyy, hh:mm:ss a"),
+            value: parseFloat(item.value),
+          };
+        });
 
       setData({
         temperature: formatData(tempRes.data.result),
@@ -124,7 +127,31 @@ export default function Chart() {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="time" />
                   <YAxis domain={["dataMin - 1", "dataMax + 1"]} />
-                  <Tooltip />
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length > 0) {
+                        const dataPoint = payload[0].payload;
+                        return (
+                          <Box
+                            sx={{
+                              backgroundColor: "white",
+                              border: "1px solid #ccc",
+                              p: 1,
+                              borderRadius: 1,
+                            }}
+                          >
+                            <Typography variant="body2">
+                              {dataPoint.fullDate}
+                            </Typography>
+                            <Typography variant="body2">
+                              Giá trị: {dataPoint.value}
+                            </Typography>
+                          </Box>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
                   <Line
                     type="monotone"
                     dataKey="value"

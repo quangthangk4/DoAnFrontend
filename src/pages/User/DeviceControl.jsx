@@ -5,9 +5,10 @@ import FanControl from "../../pages/User/FanControl";
 import LightControl from "../../pages/User/LightControl";
 import "../../scss/deviceControl.scss";
 import adafruitApi from "../../service/AdafruitService";
+import DangerSetup from "./DangerSetup";
 
 const DeviceControl = () => {
-  const devices = ["light", "fan", "door"];
+  const devices = ["light", "fan", "door", "thresholds"];
   const [activeTab, setActiveTab] = useState("light");
   const [statusDoor, setStatusDoor] = useState(false);
   const [data, setData] = useState({
@@ -15,6 +16,8 @@ const DeviceControl = () => {
     minLight: 0,
     brightness: 0,
     fanSpeed: 0,
+    tempDanger: 0,
+    humidityDanger: 0,
   });
 
   useEffect(() => {
@@ -75,6 +78,15 @@ const DeviceControl = () => {
             >
               DOOR
             </button>
+            <button
+              style={{ minWidth: "70px" }}
+              onClick={() => setActiveTab("thresholds")}
+              className={`btn me-3 ${
+                activeTab === "thresholds" ? "btn-primary" : ""
+              }`}
+            >
+              THRESHOLDS
+            </button>
           </nav>
 
           {/* Nội dung hiển thị bên dưới */}
@@ -89,6 +101,9 @@ const DeviceControl = () => {
             {activeTab === "fan" && <FanControl initFanSpeed={data.fanSpeed} />}
             {activeTab === "door" && (
               <DoorControl initUnlockStatus={statusDoor} />
+            )}
+            {activeTab === "thresholds" && (
+              <DangerSetup initHumidityDanger={data.humidityDanger} initTempDanger={data.tempDanger} />
             )}
           </div>
         </div>

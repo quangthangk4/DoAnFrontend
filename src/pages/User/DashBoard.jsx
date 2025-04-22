@@ -3,13 +3,15 @@ import React, { useEffect, useRef, useState } from "react"; // Import useEffect 
 import SockJS from "sockjs-client"; // Import SockJS
 
 // ... (keep other imports: picture1, scss, icons, avatar, getAuthenticated)
-import { FaDoorOpen } from "react-icons/fa";
-import { MdOutlineElectricBolt } from "react-icons/md";
+import { FaDoorOpen, FaLightbulb } from "react-icons/fa";
 import { TbAirConditioning } from "react-icons/tb";
+import { toast } from "react-toastify";
 import picture1 from "../../assets/picture/TechLifeCommunication.svg";
 import avatar from "../../assets/picture/member-avatar.svg";
 import "../../scss/dashboard.scss";
 import "../../scss/globalStyle.scss";
+import userApi from "../../service/UserService";
+import adafruitApi from "../../service/AdafruitService";
 // Remove 'data' import if it's not used elsewhere, or keep if needed
 // import { data } from "react-router-dom";
 
@@ -17,8 +19,17 @@ const DashBoard = () => {
   // --- Existing State and Refs ---
   const scrollRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [member, setMember] = useState([]);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const [data, setData] = useState({
+    isOn: false,
+    minLight: 0,
+    brightness: 0,
+    fanSpeed: 0,
+    tempDanger: 0,
+    humidityDanger: 0,
+  });
   // ... (keep handleMouseDown, handleMouseMove, handleMouseUp)
 
   const handleMouseDown = (e) => {
@@ -49,18 +60,8 @@ const DashBoard = () => {
   // --- Static Data (Device Controls, Notify, Member - Keep as is) ---
   const devices = [
     { id: 1, name: "Electric Fan", icon: <TbAirConditioning /> },
-    { id: 2, name: "Automatic Door", icon: <FaDoorOpen /> },
-    {
-      id: 3,
-      name: "Temperature",
-      icon: <i className="bi bi-thermometer-sun"></i>,
-    },
-    { id: 4, name: "Lights", icon: <i className="bi bi-lightbulb"></i> },
-    {
-      id: 5,
-      name: "Chưa biết là gì",
-      icon: <i className="bi bi-question-diamond"></i>,
-    },
+    { id: 2, name: "Door", icon: <FaDoorOpen /> },
+    { id: 4, name: "Lights", icon: <FaLightbulb /> },
   ];
 
   // This state is for the device toggles, keep it
@@ -117,33 +118,48 @@ const DashBoard = () => {
   });
 
   const notify = [
-
     // {
     //   id: 1,
     //   data: "Low light detected, consider turning on the light automatically.",
     //   icon: <MdOutlineElectricBolt />,
     //   color: "#ffdc64",
     // },
-    {
+    (temperature >= data.tempDanger ) && {
       id: 2,
-      data: "Temperature exceeds 35°C!",
+      data: `Temperature exceeds ${data.tempDanger}°C!`,
       icon: <i className="bi bi-exclamation-circle-fill"></i>,
       color: "#b22a2a",
     },
     // ...(keep other notify items)
-    {
+    (humidity <= data.humidityDanger) && {
       id: 7,
-      data: "Temperature exceeds 35°C!",
-      icon: <i className="bi bi-exclamation-circle-fill"></i>,
+      data: `humidity lower ${data.humidityDanger}%!`,
+      icon: <i className="bi bi-info-circle-fill"></i>,
       color: "#b22a2a",
     },
   ];
 
-  const member = [
-    { id: 1, avatar: avatar, name: "Thắng", permisstion: "Partial Access" },
-    // ...(keep other member items)
-    { id: 11, avatar: avatar, name: "Thắng", permisstion: "Partial Access" },
-  ];
+  useEffect(() => {
+    const fetData = async () => {
+      try {
+        var response = await adafruitApi.getData();
+        console.log("response: ", response);
+        setData(response.data?.result);
+      } catch (error) {
+        toast.error("lỗi gọi APi data");
+      }
+    };
+    const fetchAllUser = async () => {
+      try {
+        var response = await userApi.getAllUser();
+        setMember(response.data?.result);
+      } catch (error) {
+        toast.error(error.response?.data.message);
+      }
+    };
+    fetData();
+    fetchAllUser();
+  }, []);
 
   // --- WebSocket Connection Logic ---
   useEffect(() => {
@@ -326,7 +342,7 @@ const DashBoard = () => {
 
                     {/* Nội dung thiết bị */}
                     <div
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: "pointer", padding: "10px 0px" }}
                       className={`icon-control ${
                         activeStates[index]
                           ? "text-active-light"
@@ -334,7 +350,7 @@ const DashBoard = () => {
                       }`}
                     >
                       {device.icon} {/* Icon theo từng loại thiết bị */}
-                      <p className="fs-6 fw-bold m-0">{device.name}</p>
+                      <p className="fs-6 mt-1 fw-bold m-0">{device.name}</p>
                     </div>
                   </div>
                 </div>
@@ -440,17 +456,17 @@ const DashBoard = () => {
                     className="member__infor text-center d-inline-block me-3"
                     key={memberItem.id}
                   >
-                    <div className="avatar">
-                      <img src={memberItem.avatar} alt="avatar" />
+                    <div className="avatar justify-items-center">
+                      <img src={avatar} alt="avatar" />
                     </div>
                     <div className="member__name fs-5 fw-bold">
-                      {memberItem.name}
+                      {memberItem.username}
                     </div>
                     <div
                       className="member__permission m-0"
                       style={{ color: "#ccc" }}
                     >
-                      {memberItem.permisstion}
+                      full Access
                     </div>
                   </div>
                 )
